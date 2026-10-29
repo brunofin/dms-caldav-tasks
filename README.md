@@ -6,6 +6,18 @@ Plugin ID: `caldavTasks`. Version: **0.5.1**.
 
 ![CalDAV Tasks showing grouped, collapsible task lists from OpenCloud and Evolution in light mode](assets/screenshot.jpg)
 
+## Android companion
+
+Take the same grouped, collapsible task-list workflow to your phone with
+[CalDAV Tasks for Android](https://github.com/brunofin/caldav-tasks-android): a native
+Material 3 app with multiple CalDAV accounts, Active / All / Done filters, subtasks,
+and a resizable home-screen task-list widget.
+
+Configure the same CalDAV accounts separately in both clients to work with the
+same tasks through your server. No direct device pairing or credential transfer
+is needed. The Android app uses **direct CalDAV only**; Evolution/EDS system-account
+support remains a feature of this desktop plugin.
+
 ## Features
 
 - Multiple named connections, each with its own task lists.
