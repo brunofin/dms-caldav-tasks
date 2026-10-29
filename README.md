@@ -4,7 +4,9 @@ A multi-provider **task** widget with the compact card UI of
 [Dank Todo](https://github.com/deepu105/dms-dank-todo), not an agenda/calendar widget.
 Plugin ID: `caldavTasks`. Version: **0.5.1**.
 
-![CalDAV Tasks showing grouped, collapsible task lists from OpenCloud and Evolution in light mode](assets/screenshot.jpg)
+<p align="center">
+  <img src="assets/screenshot.jpg" alt="CalDAV Tasks showing grouped, collapsible task lists from OpenCloud and Evolution in light mode" />
+</p>
 
 ## Android companion
 
