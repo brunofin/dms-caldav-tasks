@@ -13,11 +13,12 @@ Item {
     signal editRequested
     signal childRequested
     signal deleteRequested
-    implicitHeight: Math.max(40, title.implicitHeight + Theme.spacingS * 2)
+    readonly property real minimumCardWidth: check.width + actions.width + Theme.spacingXS * 4 + Theme.fontSizeMedium * 6
+    implicitHeight: Math.max(Theme.iconSize + Theme.spacingS * 2, title.implicitHeight + Theme.spacingS * 2)
 
     Rectangle {
         id: card
-        x: Math.min(root.depth * 18, Math.max(0, root.width - 210))
+        x: Math.min(root.depth * (Theme.spacingL + Theme.spacingXXS), Math.max(0, root.width - root.minimumCardWidth))
         width: root.width - x
         height: root.height
         radius: Theme.cornerRadius / 2

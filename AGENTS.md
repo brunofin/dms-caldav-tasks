@@ -57,6 +57,10 @@ dms ipc call plugins reload caldavTasks
 
 - Plugin ID and IPC target are `caldavTasks`, distinct from `tasks` and `dankTodo`.
 - UI derives from Dank Todo; retain MIT attribution. Use DMS Theme and widget primitives.
+- Use DankListView's built-in scrollbar, DankToggle's controlled `toggled` signal,
+  and DankTooltipV2's `show(text, item)` / `hide()` API. Do not reintroduce raw Qt
+  checkbox/tooltip/scrollbar styling. Derive UI dimensions from Theme icon/font/spacing
+  tokens and content implicit sizes, not fixed pixel constants.
 - Credentials must not enter argv, logs, git or `plugin_settings.json`.
 - Config is `~/.config/dms-caldav-tasks/connections.json`, atomically written mode 0600.
 - Only operate on VTODO resources. Never delete mixed event/task collections.

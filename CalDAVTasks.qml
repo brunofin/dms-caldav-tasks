@@ -8,7 +8,7 @@ import "UI" as TaskUi
 
 PluginComponent {
     id: root
-    popoutWidth: 480
+    popoutWidth: Theme.fontSizeMedium * 32 + Theme.spacingL * 2
 
     property var sources: []
     property var lists: []
@@ -280,7 +280,7 @@ PluginComponent {
             spacing: Theme.spacingXS
             DankIcon {
                 name: root.activeCount > 0 ? "checklist" : "check_circle"
-                size: Theme.iconSize - 6
+                size: Theme.iconSizeSmall
                 color: root.activeCount > 0 ? Theme.primary : Theme.surfaceVariantText
                 anchors.verticalCenter: parent.verticalCenter
             }
@@ -296,7 +296,7 @@ PluginComponent {
     verticalBarPill: Component {
         Column {
             spacing: Theme.spacingXS
-            DankIcon { name: "checklist"; size: Theme.iconSize - 6; color: Theme.primary; anchors.horizontalCenter: parent.horizontalCenter }
+            DankIcon { name: "checklist"; size: Theme.iconSizeSmall; color: Theme.primary; anchors.horizontalCenter: parent.horizontalCenter }
             StyledText { text: root.pillCountLabel(); visible: text.length > 0; color: Theme.surfaceVariantText; anchors.horizontalCenter: parent.horizontalCenter }
         }
     }
@@ -304,7 +304,7 @@ PluginComponent {
     popoutContent: Component {
         PopoutComponent {
             id: popout
-            width: 440
+            width: root.popoutWidth - Theme.spacingL * 2 - Theme.spacingS
             headerText: "Tasks"
             detailsText: root.activeCount + " active · " + root.doneCount + " done · " + root.sources.length + " connections · " + root.lists.length + " lists"
             showCloseButton: true
@@ -323,8 +323,9 @@ PluginComponent {
                     Repeater {
                         model: root.connectionSummary
                         Rectangle {
+                            id: connectionChip
                             width: Math.min(connections.width, connectionLabel.implicitWidth + Theme.spacingM * 2)
-                            height: 32
+                            height: Math.max(Theme.iconSizeLarge, connectionLabel.implicitHeight + Theme.spacingS * 2)
                             radius: Theme.cornerRadius
                             color: jumpArea.containsMouse ? Theme.surfaceContainerHighest : Theme.surfaceContainerHigh
                             border.width: 1
@@ -349,10 +350,13 @@ PluginComponent {
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
+                                onEntered: connectionTooltip.show("Expand and jump to " + modelData.name + ". Other connections are not filtered out.", connectionChip)
+                                onExited: connectionTooltip.hide()
+                                onPressed: connectionTooltip.hide()
                                 onClicked: root.revealSource(modelData.id)
                             }
-                            ToolTip.visible: jumpArea.containsMouse
-                            ToolTip.text: "Expand and jump to " + modelData.name + ". Other connections are not filtered out."
+                            DankTooltipV2 { id: connectionTooltip }
+                            onVisibleChanged: { if (!visible) connectionTooltip.hide() }
                         }
                     }
                 }
@@ -364,10 +368,11 @@ PluginComponent {
                         model: [{key: "active", label: "Active", count: root.activeCount}, {key: "all", label: "All", count: root.visibleCount}, {key: "done", label: "Done", count: root.doneCount}]
                         Rectangle {
                             width: (filters.width - filters.spacing * 2) / 3
-                            height: 30
+                            height: Math.max(Theme.iconSize + Theme.spacingXS * 2, filterLabel.implicitHeight + Theme.spacingS * 2)
                             radius: Theme.cornerRadius
                             color: root.filter === modelData.key ? Theme.primary : Theme.surfaceContainerHigh
                             StyledText {
+                                id: filterLabel
                                 anchors.centerIn: parent
                                 text: modelData.label + " (" + modelData.count + ")"
                                 font.pixelSize: Theme.fontSizeSmall
@@ -431,23 +436,16 @@ PluginComponent {
                     }
                 }
 
-                ListView {
+                DankListView {
                     id: groupedList
                     objectName: "groupedTaskList"
                     width: parent.width
-                    height: Math.min(440, Math.max(64, contentHeight))
+                    height: Math.min(Theme.fontSizeMedium * 28 + Theme.spacingXL * 2, Math.max(Theme.iconSizeLarge * 2, contentHeight))
                     clip: true
                     spacing: Theme.spacingXS
                     model: root.displayRows
-                    ScrollBar.vertical: ScrollBar {
-                        id: scrollBar
-                        policy: ScrollBar.AlwaysOn
-                        active: true
-                        width: 8
-                        minimumSize: 0.08
-                        contentItem: Rectangle { radius: width / 2; color: Theme.primary; opacity: scrollBar.pressed ? 1 : 0.7 }
-                        background: Rectangle { radius: width / 2; color: Theme.surfaceContainerHighest }
-                    }
+                    ScrollBar.vertical.policy: ScrollBar.AlwaysOn
+                    ScrollBar.vertical.active: true
                     Connections {
                         target: root
                         function onRevealSource(sourceId) {
@@ -470,14 +468,14 @@ PluginComponent {
                         id: rowLoader
                         required property var modelData
                         readonly property var row: modelData
-                        width: groupedList.width - (scrollBar.visible ? scrollBar.width + Theme.spacingS : 0)
+                        width: groupedList.width - (groupedList.ScrollBar.vertical.visible ? groupedList.ScrollBar.vertical.width + Theme.spacingS : 0)
                         height: item ? item.implicitHeight : 0
                         sourceComponent: row.kind === "source" ? sourceHeading : row.kind === "list" ? listHeading : row.kind === "task" ? taskRow : row.kind === "composer" ? composerRow : emptyRow
 
                         Component {
                             id: sourceHeading
                             Item {
-                                implicitHeight: 62
+                                implicitHeight: Math.max(Theme.iconSizeLarge + Theme.spacingL * 2, sourceLabels.implicitHeight + Theme.spacingL * 2)
                                 TaskUi.IconAction {
                                     id: sourceChevron
                                     anchors.left: parent.left
@@ -516,7 +514,7 @@ PluginComponent {
                         Component {
                             id: listHeading
                             Item {
-                                implicitHeight: 56
+                                implicitHeight: Math.max(Theme.iconSize + Theme.spacingL * 2, listLabels.implicitHeight + Theme.spacingM * 2)
                                 TaskUi.IconAction {
                                     id: listChevron
                                     anchors.left: parent.left
@@ -603,7 +601,7 @@ PluginComponent {
                         Component {
                             id: emptyRow
                             Item {
-                                implicitHeight: 28
+                                implicitHeight: Theme.fontSizeSmall + Theme.spacingS * 2
                                 StyledText { anchors.fill: parent; text: rowLoader.row.text || ""; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; leftPadding: Theme.spacingS; verticalAlignment: Text.AlignVCenter }
                             }
                         }

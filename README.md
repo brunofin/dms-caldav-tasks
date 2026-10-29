@@ -2,7 +2,7 @@
 
 A multi-provider **task** widget with the compact card UI of
 [Dank Todo](https://github.com/deepu105/dms-dank-todo), not an agenda/calendar widget.
-Plugin ID: `caldavTasks`. Version: **0.5.0**.
+Plugin ID: `caldavTasks`. Version: **0.5.1**.
 
 ![CalDAV Tasks showing grouped, collapsible task lists from OpenCloud and Evolution in light mode](assets/screenshot.jpg)
 
@@ -23,6 +23,8 @@ Plugin ID: `caldavTasks`. Version: **0.5.0**.
   lists stay visible in every filter. Each list's `+` opens its own inline task
   composer; edit/subtask actions target that task's original connection/list.
 - Bar counts, filters and read-only IPC span all enabled connections/lists.
+- Native DMS list scrolling, toggles and tooltips, with theme-derived sizing for
+  icon actions, rows and popout layout.
 - Connections are ordered by total open tasks (most first); each connection's
   lists are ordered by their own open-task counts. Ties sort alphabetically.
   Ordering updates after synchronization and ignores filters and collapse state.

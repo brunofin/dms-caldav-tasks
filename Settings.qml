@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls
 import qs.Common
 import qs.Widgets
 import qs.Modules.Plugins
@@ -50,7 +49,7 @@ PluginSettings {
         model: root.sources
         StyledRect {
             width: parent.width
-            height: 56
+            height: editConnectionButton.height + Theme.spacingS * 2
             radius: Theme.cornerRadius
             color: Theme.surfaceContainerHigh
             Row {
@@ -58,13 +57,14 @@ PluginSettings {
                 anchors.margins: Theme.spacingS
                 spacing: Theme.spacingS
                 StyledText {
-                    width: parent.width - 80
+                    width: parent.width - editConnectionButton.width - parent.spacing
                     anchors.verticalCenter: parent.verticalCenter
                     text: modelData.name + (modelData.provider === "evolution" ? " · System" : " · CalDAV") + (modelData.enabled ? "" : " (disabled)")
                     color: Theme.surfaceText
                     elide: Text.ElideRight
                 }
                 DankButton {
+                    id: editConnectionButton
                     text: "Edit"
                     enabled: !backend.busy
                     onClicked: {
@@ -128,7 +128,14 @@ PluginSettings {
                 placeholderText: root.editingId ? "App password (blank keeps existing)" : "App password"
                 echoMode: TextInput.Password
             }
-            CheckBox { id: enabledInput; text: "Enabled"; checked: true }
+            DankToggle {
+                id: enabledInput
+                objectName: "connectionEnabledToggle"
+                width: parent.width
+                text: "Enabled"
+                checked: true
+                onToggled: checked => enabledInput.checked = checked
+            }
             Row {
                 spacing: Theme.spacingS
                 DankButton {

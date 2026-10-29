@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls
 import qs.Common
 import qs.Widgets
 
@@ -9,8 +8,8 @@ Rectangle {
     property string label: ""
     property bool destructive: false
     signal clicked
-    width: 28
-    height: 28
+    width: Theme.iconSize + Theme.spacingXS
+    height: width
     radius: height / 2
     color: area.containsMouse ? Theme.surfaceContainerHighest : "transparent"
     opacity: enabled ? 1 : 0.35
@@ -22,7 +21,7 @@ Rectangle {
     DankIcon {
         anchors.centerIn: parent
         name: root.iconName
-        size: 17
+        size: Theme.iconSizeSmall
         color: root.destructive ? Theme.error : (area.containsMouse ? Theme.primary : Theme.surfaceVariantText)
     }
     MouseArea {
@@ -30,9 +29,12 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
+        onEntered: { if (root.label) tooltip.show(root.label, root) }
+        onExited: tooltip.hide()
+        onPressed: tooltip.hide()
         onClicked: root.clicked()
     }
-    ToolTip.visible: area.containsMouse && label !== ""
-    ToolTip.text: label
-    ToolTip.delay: 500
+    DankTooltipV2 { id: tooltip; objectName: "actionTooltip" }
+    onVisibleChanged: { if (!visible) tooltip.hide() }
+    onEnabledChanged: { if (!enabled) tooltip.hide() }
 }

@@ -2,7 +2,7 @@
     "id": "caldavTasks",
     "name": "CalDAV Tasks",
     "description": "CalDAV and Evolution system task sources with a Dank Todo-inspired interface",
-    "version": "0.5.0",
+    "version": "0.5.1",
     "license": "MIT",
     "author": "Bruno Finger",
     "icon": "checklist",

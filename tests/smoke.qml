@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Window
+import QtQuick.Controls
 import Quickshell
 import qs.Common
 import qs.Services
@@ -13,7 +14,16 @@ ShellRoot {
     property var popout: null
     property var pill: null
     property var restoredWidget: null
+    property var iconFixture: null
     property bool fixturesTested: false
+    function findItem(item, name) {
+        if (item.objectName === name) return item
+        for (const child of item.children || []) {
+            const found = findItem(child, name)
+            if (found) return found
+        }
+        return null
+    }
     QtObject {
         id: stateService
         property var savedState: ({})
@@ -182,6 +192,40 @@ ShellRoot {
             root.widget.filter = "active"
             root.settings.sources = [{id: "one", name: "System", enabled: true, provider: "evolution"}]
             root.settings.provider = "evolution"
+            const enabledToggle = root.findItem(root.settings, "connectionEnabledToggle")
+            if (!enabledToggle || typeof enabledToggle.handleClick !== "function") {
+                console.error("SMOKE FAILURE: connection settings must use the native DankToggle")
+            } else {
+                enabledToggle.toggled(false)
+                if (enabledToggle.checked) console.error("SMOKE FAILURE: disabled connection draft must update")
+                root.settings.clearForm()
+                if (!enabledToggle.checked) console.error("SMOKE FAILURE: new connection defaults to enabled")
+            }
+            const nativeList = root.findItem(root.popout, "groupedTaskList")
+            if (!nativeList || nativeList.mouseWheelSpeed === undefined || !nativeList.ScrollBar.vertical)
+                console.error("SMOKE FAILURE: grouped view must use the native DankListView and scrollbar")
+            const iconComponent = Qt.createComponent("file://" + Quickshell.env("CALDAV_TASKS_PROJECT") + "/UI/IconAction.qml")
+            root.iconFixture = iconComponent.createObject(scene.contentItem, {label: "Action test", iconName: "edit"})
+            if (!root.iconFixture) {
+                console.error("SMOKE FAILURE: themed icon action creation")
+            } else {
+                const tooltip = root.findItem(root.iconFixture, "actionTooltip")
+                if (!tooltip || typeof tooltip.show !== "function") console.error("SMOKE FAILURE: native Dank tooltip missing")
+                else { tooltip.show("Action test", root.iconFixture); tooltip.hide() }
+                const originalIconSize = Theme.iconSize
+                const originalWidth = root.iconFixture.width
+                Theme.iconSize = originalIconSize + Theme.spacingS
+                if (root.iconFixture.width !== originalWidth + Theme.spacingS)
+                    console.error("SMOKE FAILURE: icon targets must scale with Theme.iconSize")
+                Theme.iconSize = originalIconSize
+                root.iconFixture.visible = false
+            }
+            const originalScale = Theme.fontScale
+            const originalPopoutWidth = root.widget.popoutWidth
+            Theme.fontScale = originalScale * 1.5
+            if (root.widget.popoutWidth <= originalPopoutWidth)
+                console.error("SMOKE FAILURE: popout layout must scale with theme fonts")
+            Theme.fontScale = originalScale
             root.fixturesTested = true
         }
     }
