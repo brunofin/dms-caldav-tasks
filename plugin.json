@@ -1,0 +1,19 @@
+{
+    "id": "caldavTasks",
+    "name": "CalDAV Tasks",
+    "description": "CalDAV and Evolution system task sources with a Dank Todo-inspired interface",
+    "version": "0.5.0",
+    "license": "MIT",
+    "author": "Bruno Finger",
+    "icon": "checklist",
+    "type": "widget",
+    "category": "productivity",
+    "component": "./CalDAVTasks.qml",
+    "settings": "./Settings.qml",
+    "capabilities": ["dankbar-widget"],
+    "dependencies": ["python3", "python-caldav"],
+    "compositors": ["any"],
+    "distro": ["any"],
+    "permissions": ["settings_read", "settings_write"],
+    "requires": ["python3", "python-caldav"]
+}

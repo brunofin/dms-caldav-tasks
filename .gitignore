@@ -1,0 +1,8 @@
+__pycache__/
+.venv/
+*.pyc
+.pytest_cache/
+connections.json
+*_state.json
+.env
+.env.*
